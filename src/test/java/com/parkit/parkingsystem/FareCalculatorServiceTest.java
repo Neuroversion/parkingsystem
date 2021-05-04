@@ -55,18 +55,26 @@ public class FareCalculatorServiceTest {
         assertEquals(ticket.getPrice(),  0);
     }
 
-   /* @Test
+    @Test
     public void calculateFareForUsualCar() {
         Date inTime = new Date();
-        inTime.setTime(inTime.getTime() - (30 * 60 * 1000));
+        inTime.setTime(inTime.getTime() - ( 60 * 60 * 1000));
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+        boolean usualVehicle = true;
+        boolean notUsualVehicle = false;
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket);
-        assertEquals(ticket.getPrice(), (5 * Fare.CAR_RATE_PER_HOUR) / 100);
-    }*/
+        fareCalculatorService.calculateFare(ticket.usualVehicle);
+        // ajouter un booleen dans(ticket) pour les vehicules recurrents
+        assertEquals(ticket.getPrice(), 0.95*(0.5*Fare.CAR_RATE_PER_HOUR));
+        //demander a la base de donner le nombre de fois ou un vehicule stationne
+
+
+
+            }
+
 
     @Test
     public void calculateFareBike(){
@@ -100,13 +108,13 @@ public class FareCalculatorServiceTest {
         Date inTime = new Date();
         inTime.setTime(inTime.getTime() - ( 60 * 60 * 1000));
         Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);// ajouter un booleen dans(ticket) pour les vehicules recurrents
-        assertEquals(ticket.getPrice(), 0.95*(0.5*Fare.CAR_RATE_PER_HOUR));
+        assertEquals(ticket.getPrice(), 0.95*(0.5*Fare.BIKE_RATE_PER_HOUR));
         //demander a la base de donner le nombre de fois ou un vehicule stationne
     }
 
