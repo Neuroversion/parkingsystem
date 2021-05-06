@@ -5,7 +5,7 @@ import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
 
-    public void calculateFare(Ticket ticket){
+    public void calculateFare(Ticket ticket,boolean usualVehicule ){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
@@ -24,6 +24,8 @@ public class FareCalculatorService {
 
                 break;
             }
+            //case usualVehicle ajouter la fonction pour calculer -5%
+
             default: throw new IllegalArgumentException("Unknown Parking Type");
         }
     }

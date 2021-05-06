@@ -40,6 +40,29 @@ public class TicketDAO {
         }
     }
 
+    public boolean isUsualVehicle(String vehicleRegNumber){
+        Connection con = null;
+        boolean isUsualVehicle = false;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.IS_USUAL_VEHICLE);
+            // VEHICLE_REG_NUMBER
+            ps.setString(1,vehicleRegNumber);
+            ps.setInt(2, 7); // Period duration in days
+            ps.setInt(3, 0); // Minimal price
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                isUsualVehicle = rs.getInt(1) > 3;
+            }
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
+        } catch (Exception ex){
+            logger.error("Error fetching next available slot",ex);
+        } finally {
+            dataBaseConfig.closeConnection(con);
+            return isUsualVehicle;
+        }
+    }
     public Ticket getTicket(String vehicleRegNumber) {
         Connection con = null;
         Ticket ticket = null;

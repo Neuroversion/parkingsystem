@@ -53,11 +53,13 @@ public class ParkingServiceTest {
             throw  new RuntimeException("Failed to set up test mock objects");
         }
     }
+    // TODO ajouter un test pour une entrée
 
-   /* @Test
+    @Test
     public void processExitingVehicleTest(){
         parkingService.processExitingVehicle();
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
-    }*/
+        // Vérifier qu'on appelle bien le fareCalculatorService
+    }
 
 }
