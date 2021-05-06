@@ -24,7 +24,19 @@ public class FareCalculatorService {
 
                 break;
             }
-            //case usualVehicle ajouter la fonction pour calculer -5%
+            case isUsualVehicle.CAR: {
+                ticket.setPrice(durationH * 0.95 * (0.5 * Fare.CAR_RATE_PER_HOUR));
+                    //case usualVehicle ajouter la fonction pour calculer -5%
+
+                break;
+            }
+
+            case isUsualVehicle.BIKE: {
+                ticket.setPrice(durationH * 0.95 * (0.5 * Fare.BIKE_RATE_PER_HOUR ));
+                //case usualVehicle ajouter la fonction pour calculer -5%
+
+                break;
+            }
 
             default: throw new IllegalArgumentException("Unknown Parking Type");
         }

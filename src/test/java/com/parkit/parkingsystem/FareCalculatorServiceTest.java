@@ -67,7 +67,6 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket,true);
-        // ajouter un booleen dans(ticket) pour les vehicules recurrents
         assertEquals(ticket.getPrice(), 0.95*(0.5*Fare.CAR_RATE_PER_HOUR));
         //demander a la base de donner le nombre de fois ou un vehicule stationne
 
