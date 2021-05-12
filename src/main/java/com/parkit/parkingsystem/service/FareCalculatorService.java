@@ -3,9 +3,12 @@ package com.parkit.parkingsystem.service;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 
+import static com.parkit.parkingsystem.constants.DBConstants.IS_USUAL_VEHICLE;
+import static com.parkit.parkingsystem.constants.ParkingType.CAR;
+
 public class FareCalculatorService {
 
-    public void calculateFare(Ticket ticket,boolean usualVehicule ){
+    public void calculateFare(Ticket ticket,boolean usualVehicle ){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
@@ -14,29 +17,18 @@ public class FareCalculatorService {
         long outTime = ticket.getOutTime().getTime();
         long duration  = Math.max(outTime- inTime - (30*60*1000) , 0);
         double durationH = (duration/1000/60)/60.0;
+        double usualFare = usualVehicle ? 0.95 : 1.0;
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
-                ticket.setPrice(durationH * Fare.CAR_RATE_PER_HOUR );
+                ticket.setPrice(durationH * Fare.CAR_RATE_PER_HOUR * usualFare);
                 break;
             }
             case BIKE: {
-                ticket.setPrice(durationH * Fare.BIKE_RATE_PER_HOUR );
-
-                break;
-            }
-            case isUsualVehicle.CAR: {
-                ticket.setPrice(durationH * 0.95 * (0.5 * Fare.CAR_RATE_PER_HOUR));
-                    //case usualVehicle ajouter la fonction pour calculer -5%
+                ticket.setPrice(durationH * Fare.BIKE_RATE_PER_HOUR * usualFare );
 
                 break;
             }
 
-            case isUsualVehicle.BIKE: {
-                ticket.setPrice(durationH * 0.95 * (0.5 * Fare.BIKE_RATE_PER_HOUR ));
-                //case usualVehicle ajouter la fonction pour calculer -5%
-
-                break;
-            }
 
             default: throw new IllegalArgumentException("Unknown Parking Type");
         }

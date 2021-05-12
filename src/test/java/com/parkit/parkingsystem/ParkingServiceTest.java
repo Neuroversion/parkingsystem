@@ -36,30 +36,59 @@ public class ParkingServiceTest {
     private void setUpPerTest() {
         try {
             when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+            when(inputReaderUtil.readSelection()).thenReturn(1);
+            when(parkingSpotDAO.getNextAvailableSlot(any())).thenReturn(1);
 
-            ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
-            Ticket ticket = new Ticket();
-            ticket.setInTime(new Date(System.currentTimeMillis() - (60*60*1000)));
-            ticket.setParkingSpot(parkingSpot);
-            ticket.setVehicleRegNumber("ABCDEF");
-            when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
-            when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
-
-            when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         } catch (Exception e) {
             e.printStackTrace();
-            throw  new RuntimeException("Failed to set up test mock objects");
+            throw new RuntimeException("Failed to set up test mock objects");
         }
     }
-    // TODO ajouter un test pour une entrée
 
     @Test
-    public void processExitingVehicleTest(){
-        parkingService.processExitingVehicle();
-        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
-        // Vérifier qu'on appelle bien le fareCalculatorService
-    }
+    public void processIncomingVehicleTest() {
 
-}
+        parkingService.processIncomingVehicle();
+        //verifier les actions faites par le service (les identifier voir ce qu'ils font plus besoin des when verify et AssertThat)
+
+
+    }
+/*
+        @Test
+        public void getVehichleRegNumber () {
+            parkingService.processIncomingVehicle();
+            //vérifier qu'une plaque d'immatriculation est bien entrée
+        }
+
+        @Test
+        public void getNextParkingNumberIfAvailable () {
+            parkingService.processIncomingVehicle();
+            //vérifier qu'on obtient bien la prochaine place disponible
+
+        }
+
+        @Test
+        public void getVehichleType () {
+            parkingService.processIncomingVehicle();
+            System.out.println("Please select vehicle type from menu");
+            System.out.println("1 CAR");
+            System.out.println("2 BIKE");
+            int input = inputReaderUtil.readSelection();
+            //vérifier que le type du véhicule est bien entré
+
+        }
+
+
+        // TODO ajouter un test pour une entrée
+
+        @Test
+        public void processExitingVehicleTest () {
+            parkingService.processExitingVehicle();
+            verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+            // Vérifier qu'on appelle bien le fareCalculatorService
+        }
+
+    }
+*/}
