@@ -1,9 +1,7 @@
 package com.parkit.parkingsystem;
 
-import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
@@ -11,12 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
-import java.util.Date;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,8 +34,8 @@ public class ParkingServiceTest {
             when(inputReaderUtil.readSelection()).thenReturn(1);
             when(parkingSpotDAO.getNextAvailableSlot(any())).thenReturn(1);
 
-
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to set up test mock objects");
@@ -51,8 +46,16 @@ public class ParkingServiceTest {
     public void processIncomingVehicleTest() {
 
         parkingService.processIncomingVehicle();
+        //verify(ticketDAO.getTicket(VehicleRegNumber())).isNotNull();
+        //assertThat(ticketDAO.VehicleRegNumber()).isNotNull();
+        //Ticket saved = ticketDAO.getTicket("ABCDEF");
+        //verify((saved).getVehicleRegNumber().isNotNull());
         //verifier les actions faites par le service (les identifier voir ce qu'ils font plus besoin des when verify et AssertThat)
-
+        Ticket saved = ticketDAO.getTicket("ABCDEF");
+        assertThat(saved).isNotNull();
+        assertThat(saved.getOutTime()).is();
+        //assertThat(saved.getParkingSpot()).isNotNull();
+        //assertThat(saved.getParkingSpot().isAvailable()).isFalse();
 
     }
 /*
