@@ -1,11 +1,13 @@
 package com.parkit.parkingsystem;
 
+import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.service.FareCalculatorService;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +17,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Date;
+
+import static com.parkit.parkingsystem.service.ParkingService.fareCalculatorService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -68,6 +73,89 @@ public class ParkingServiceTest {
     }
     // faire la meme chose pour une moto, une sortie moto et voiture.
 
+    @Test
+    public void processIncomingBikeTest() throws Exception {
+        when(inputReaderUtil.readSelection()).thenReturn(2);
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        when(parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE)).thenReturn(4);
+
+        parkingService.processIncomingVehicle();
+
+        ArgumentCaptor<ParkingSpot> parkingSpotCaptor = ArgumentCaptor.forClass(ParkingSpot.class);
+        verify(parkingSpotDAO).updateParking(parkingSpotCaptor.capture());
+        ParkingSpot updatedParkingSpot = parkingSpotCaptor.getValue();
+        assertThat(updatedParkingSpot.isAvailable()).isFalse();
+        assertThat(updatedParkingSpot.getParkingType()).isEqualTo(ParkingType.BIKE);
+        assertThat(updatedParkingSpot.getId()).isEqualTo(4);
+
+        ArgumentCaptor<Ticket> saveTicketCaptor = ArgumentCaptor.forClass(Ticket.class);
+        verify(ticketDAO).saveTicket(saveTicketCaptor.capture());
+        Ticket saveTicket = saveTicketCaptor.getValue();
+        assertThat(saveTicket.getInTime()).isNotNull();
+        assertThat(saveTicket.getVehicleRegNumber()).isEqualTo("ABCDEF");
+        assertThat(saveTicket.getParkingSpot().getId()).isEqualTo(4);
+        assertThat(saveTicket.getPrice()).isEqualTo(0.0);
+        assertThat(saveTicket.getOutTime()).isNull();
+
+    }
+@Test
+    public void processExitingCarTest() throws Exception {
+    parkingService.processIncomingVehicle();
+    Date inTime = new Date();
+    inTime.setTime( inTime.getTime() - (  60 * 60 * 1000) );
+    Date outTime = new Date();
+    ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+
+    ticket.setInTime(inTime);
+    ticket.setOutTime(outTime);
+    ticket.setParkingSpot(parkingSpot);
+    fareCalculatorService.calculateFare(ticket,false);
+    assertEquals(ticket.getPrice(), 0.5* Fare.CAR_RATE_PER_HOUR);
+            String vehicleRegNumber = getVehicleRegNumber("ABCDEF");
+            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
+            Date outTime = new Date();
+            ticket.setOutTime(outTime);
+
+            fareCalculatorService.calculateFare(ticket,false);
+            ticketDAO.updateTicket(ticket); {
+                ParkingSpot parkingSpot = ticket.getParkingSpot();
+                parkingSpot.setAvailable(true);
+                //verifier que update ticket est true
+                parkingSpotDAO.updateParking(parkingSpot);
+                System.out.println("Please pay the parking fare:" + ticket.getPrice());
+                System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
+            }else{
+                System.out.println("Unable to update ticket information. Error occurred");
+            }
+        }catch(Exception e){
+            logger.error("Unable to process exiting vehicle",e);
+        }
+    }
+
+    @Test
+    public void processExitingBikeTest() {
+        try{
+            String vehicleRegNumber = getVehicleRegNumber();
+            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
+            Date outTime = new Date();
+            ticket.setOutTime(outTime);
+            // TODO Appeler le ticket DAO pour savoir si le vehicule est un habitué ou pas
+            fareCalculatorService.calculateFare(ticket,false);
+            if(ticketDAO.updateTicket(ticket)) {
+                ParkingSpot parkingSpot = ticket.getParkingSpot();
+                parkingSpot.setAvailable(true);
+                //verifier que update ticket est true
+                parkingSpotDAO.updateParking(parkingSpot);
+                System.out.println("Please pay the parking fare:" + ticket.getPrice());
+                System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
+            }else{
+                System.out.println("Unable to update ticket information. Error occurred");
+            }
+        }catch(Exception e){
+            logger.error("Unable to process exiting vehicle",e);
+        }
+    }
+
         @Test
         public void getVehicleRegNumber () throws Exception {
             parkingService.processIncomingVehicle();
@@ -77,39 +165,5 @@ public class ParkingServiceTest {
             }
 
 
-     /*   @Test
-        public void getNextParkingNumberIfAvailable () {
-            parkingService.processIncomingVehicle();
-            int parkingNumber=0;
-            ParkingSpot parkingSpot = null;
-            ParkingType parkingType = getVehicleType();
-            parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
-            //vérifier qu'on obtient bien la prochaine place disponible
-            //int parkingNumber=0;
-           //ParkingSpot parkingSpot = null;
-            //ParkingType parkingType = getVehicleType();
-         assertThat(parkingSpotDAO.ParkingSpot(parkingNumber,parkingType, true));
 
-        }
-
-        @Test
-        public void getVehicleType () {
-
-            parkingService.processIncomingVehicle();
-           assertEquals(inputReaderUtil.readSelection(),1,2);
-            //vérifier que le type du véhicule est bien entré
-
-        }
-/*
-
-        // TODO ajouter un test pour une entrée
-
-        @Test
-        public void processExitingVehicleTest () {
-            parkingService.processExitingVehicle();
-            verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
-            // Vérifier qu'on appelle bien le fareCalculatorService
-        }
-
-    }*/
     }
