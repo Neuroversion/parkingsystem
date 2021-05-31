@@ -18,7 +18,7 @@ public class Ticket {
         this.id = id;
     }
 
-    public ParkingSpot getParkingSpot() {
+    public ParkingSpot getParkingSpot(boolean b) {
         return parkingSpot;
     }
 
