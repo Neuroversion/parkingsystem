@@ -47,15 +47,6 @@ public class DataBaseConfig {
                 logger.error("Error while closing result set",e);
             }
 
-           /*public void usualVehiclesCompute(VehiclesCompute rs) {
-                if(vc!=null) {
-                    Connection connection = new Connection;
-                    // Création de l'objet gérant les requêtes
-                    Statement statement = connection.createStatement();
-                    //Exécution d'une requête de lecture
-                    ResultSet resultat = statement.executeQuery( "SELECT ID, VEHICLE_REG_NUMBER" );
-                }
-            }*/
         }
     }
 

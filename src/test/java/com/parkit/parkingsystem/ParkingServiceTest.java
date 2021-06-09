@@ -3,7 +3,6 @@ package com.parkit.parkingsystem;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
@@ -37,6 +36,11 @@ public class ParkingServiceTest {
 
     @Mock
     private FareCalculatorService fareCalculatorService;
+
+
+    public ParkingServiceTest(Object xNumber) {
+
+    }
 
     @BeforeEach
     public void setUpPerTest() {
@@ -102,14 +106,14 @@ public class ParkingServiceTest {
 
         Ticket ticket = new Ticket();
         ticket.setVehicleRegNumber("ABCDEF");
-        ParkingSpot parkingSpot = ticket.getParkingSpot(true);
-        parkingSpot.setAvailable(true);
+        //ParkingSpot parkingSpot = ticket.getParkingSpot(true);
+        //parkingSpot.setAvailable(true);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(ticketDAO.getTicket("ABCDEF")).thenReturn(ticket);
         when(ticketDAO.isUsualVehicle("ABCDEF")).thenReturn(true);
         when(ticketDAO.updateTicket(ticket)).thenReturn(true);
-        when(parkingSpotDAO.updateParking(ticket.getParkingSpot(true).getId()).thenReturn(true);
-        getParkingSpot(true).getId()).isEqualTo(4);
+        when(parkingSpotDAO.updateParking(ticket.getParkingSpot(true))).thenReturn(true);
+
         parkingService.processExitingVehicle();
 
         verify(fareCalculatorService).calculateFare(ticket,true);
@@ -134,6 +138,8 @@ public class ParkingServiceTest {
         verify(fareCalculatorService).calculateFare(ticket,true);
         verify(parkingSpotDAO).updateParking(ticket.getParkingSpot(true));
     }
+
+
 }
 
 

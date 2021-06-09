@@ -16,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.SQLException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -54,7 +56,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void testParkingACar() {
+    public void testParkingACar() throws SQLException {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, fareCalculatorService);
         parkingService.processIncomingVehicle();
         Ticket saved = ticketDAO.getTicket("ABCDEF");
@@ -68,7 +70,7 @@ public class ParkingDataBaseIT {
 
 
     @Test
-    public void testParkingLotExit() throws InterruptedException {
+    public void testParkingLotExit() throws InterruptedException, SQLException {
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, fareCalculatorService);
         Thread.sleep(1000L);
