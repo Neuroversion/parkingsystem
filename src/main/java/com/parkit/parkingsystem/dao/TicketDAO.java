@@ -29,9 +29,8 @@ public class TicketDAO {
             ps.setDouble(3, ticket.getPrice());
             ps.setTimestamp(4, new Timestamp(ticket.getInTime().getTime()));
             ps.setTimestamp(5, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
-            boolean result = ps.execute();
 
-            return result;
+            return ps.execute();
         } catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
             return false;
@@ -41,10 +40,10 @@ public class TicketDAO {
         }
     }
 
-    public boolean isUsualVehicle(String vehicleRegNumber) throws SQLException {
+    public boolean isUsualVehicle(String vehicleRegNumber) {
         Connection con = null;
         PreparedStatement ps =null;
-
+        ResultSet rs = null;
         boolean isUsualVehicle = false;
         try {
             con = dataBaseConfig.getConnection();
@@ -53,7 +52,7 @@ public class TicketDAO {
             ps.setString(1,vehicleRegNumber);
             ps.setInt(2, 7); // Period duration in days
             ps.setInt(3, 0); // Minimal price
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()){
                 isUsualVehicle = rs.getInt(1) > 3;
             }
@@ -62,25 +61,25 @@ public class TicketDAO {
         } catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         } finally {
-            ResultSet rs = null;
-            dataBaseConfig.closeResultSet(null);
+
+            dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
             dataBaseConfig.closeConnection(con);
         }
         return isUsualVehicle;
     }
-    public Ticket getTicket(String vehicleRegNumber) throws SQLException {
+    public Ticket getTicket(String vehicleRegNumber) {
         Connection con = null;
         Ticket ticket = null;
         PreparedStatement ps =null;
-
+        ResultSet rs = null;
 
         try {
             con = dataBaseConfig.getConnection();
             ps = con.prepareStatement(DBConstants.GET_TICKET);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             ps.setString(1,vehicleRegNumber);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()){
                 ticket = new Ticket();
                 ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)),false);
@@ -95,8 +94,8 @@ public class TicketDAO {
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
-            ResultSet rs = null;
-            dataBaseConfig.closeResultSet(null);
+
+            dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
             dataBaseConfig.closeConnection(con);
         }

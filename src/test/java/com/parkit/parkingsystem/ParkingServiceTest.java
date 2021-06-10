@@ -15,6 +15,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +41,7 @@ public class ParkingServiceTest {
     private FareCalculatorService fareCalculatorService;
 
 
-    public ParkingServiceTest(Object xNumber) {
+    public ParkingServiceTest() {
 
     }
 
@@ -48,7 +51,16 @@ public class ParkingServiceTest {
     }
 
     @Test
-    public void processIncomingCarTest() throws Exception {
+    public void processIncomingCarTest() {
+        /*exemple  pour résoudre les rep et re2, a effacer apres
+        Ticket ticket = new Ticket();
+        ticket.setInTime(new Date());
+        Date inTime = new Date(ticket.getInTime().getTime());
+
+        ticket.setOutTime(inTime);
+
+         */
+
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
@@ -75,7 +87,7 @@ public class ParkingServiceTest {
     // faire la meme chose pour une moto, une sortie moto et voiture.
 
     @Test
-    public void processIncomingBikeTest() throws Exception {
+    public void processIncomingBikeTest() {
         when(inputReaderUtil.readSelection()).thenReturn(2);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE)).thenReturn(4);
@@ -102,7 +114,7 @@ public class ParkingServiceTest {
 
 
     @Test
-    public void processExitingCarTest() throws Exception {
+    public void processExitingCarTest() {
 
         Ticket ticket = new Ticket();
         ticket.setVehicleRegNumber("ABCDEF");
@@ -121,7 +133,7 @@ public class ParkingServiceTest {
     }
 
     @Test
-    public void processExitingBikeTest() throws Exception {
+    public void processExitingBikeTest() {
 
         Ticket ticket = new Ticket();
         ticket.setVehicleRegNumber("ABCDEF");
