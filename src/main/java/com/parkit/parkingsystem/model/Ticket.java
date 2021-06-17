@@ -18,7 +18,7 @@ public class Ticket {
         this.id = id;
     }
 
-    public ParkingSpot getParkingSpot(boolean b) {
+    public ParkingSpot getParkingSpot() {
         return parkingSpot;
     }
 
@@ -43,18 +43,36 @@ public class Ticket {
     }
 
     public Date getInTime() {
-        return inTime;
+        if (inTime == null) {
+            return null;
+        }
+        return new Date(inTime.getTime());
     }
 
     public void setInTime(Date inTime) {
-        this.inTime = inTime;
+        if (inTime == null) {
+            this.inTime = null;
+        } else {
+            this.inTime = new Date(inTime.getTime());
+        }
     }
 
+
     public Date getOutTime() {
-        return outTime;
+        if (outTime == null) {
+         return null;
+        }
+        return new Date(outTime.getTime());
     }
 
     public void setOutTime(Date outTime) {
-        this.outTime = outTime;
+        if (outTime == null) {
+            this.outTime = null;
+        } else {
+            this.outTime = new Date(outTime.getTime());
+        }
     }
+
+
+
 }

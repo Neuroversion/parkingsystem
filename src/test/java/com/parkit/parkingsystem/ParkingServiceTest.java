@@ -15,9 +15,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
+import static com.parkit.parkingsystem.constants.ParkingType.CAR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,18 +52,10 @@ public class ParkingServiceTest {
 
     @Test
     public void processIncomingCarTest() {
-        /*exemple  pour résoudre les rep et re2, a effacer apres
-        Ticket ticket = new Ticket();
-        ticket.setInTime(new Date());
-        Date inTime = new Date(ticket.getInTime().getTime());
-
-        ticket.setOutTime(inTime);
-
-         */
 
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
+        when(parkingSpotDAO.getNextAvailableSlot(CAR)).thenReturn(1);
 
         parkingService.processIncomingVehicle();
 
@@ -71,7 +63,7 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO).updateParking(parkingSpotCaptor.capture());
         ParkingSpot updatedParkingSpot = parkingSpotCaptor.getValue();
         assertThat(updatedParkingSpot.isAvailable()).isFalse();
-        assertThat(updatedParkingSpot.getParkingType()).isEqualTo(ParkingType.CAR);
+        assertThat(updatedParkingSpot.getParkingType()).isEqualTo(CAR);
         assertThat(updatedParkingSpot.getId()).isEqualTo(1);
 
         ArgumentCaptor<Ticket> saveTicketCaptor = ArgumentCaptor.forClass(Ticket.class);
@@ -79,7 +71,7 @@ public class ParkingServiceTest {
         Ticket saveTicket = saveTicketCaptor.getValue();
         assertThat(saveTicket.getInTime()).isNotNull();
         assertThat(saveTicket.getVehicleRegNumber()).isEqualTo("ABCDEF");
-        assertThat(saveTicket.getParkingSpot(true).getId()).isEqualTo(1);
+        assertThat(saveTicket.getParkingSpot().getId()).isEqualTo(1);
         assertThat(saveTicket.getPrice()).isEqualTo(0.0);
         assertThat(saveTicket.getOutTime()).isNull();
 
@@ -106,7 +98,7 @@ public class ParkingServiceTest {
         Ticket saveTicket = saveTicketCaptor.getValue();
         assertThat(saveTicket.getInTime()).isNotNull();
         assertThat(saveTicket.getVehicleRegNumber()).isEqualTo("ABCDEF");
-        assertThat(saveTicket.getParkingSpot(true).getId()).isEqualTo(4);
+        assertThat(saveTicket.getParkingSpot().getId()).isEqualTo(4);
         assertThat(saveTicket.getPrice()).isEqualTo(0.0);
         assertThat(saveTicket.getOutTime()).isNull();
 
@@ -115,43 +107,57 @@ public class ParkingServiceTest {
 
     @Test
     public void processExitingCarTest() {
-
         Ticket ticket = new Ticket();
         ticket.setVehicleRegNumber("ABCDEF");
-        //ParkingSpot parkingSpot = ticket.getParkingSpot(true);
-        //parkingSpot.setAvailable(true);
+        ParkingSpot parkingSpot = new ParkingSpot(1, CAR, false);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setInTime(new Date(new Date().getTime() - 3600000));
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(ticketDAO.getTicket("ABCDEF")).thenReturn(ticket);
         when(ticketDAO.isUsualVehicle("ABCDEF")).thenReturn(true);
         when(ticketDAO.updateTicket(ticket)).thenReturn(true);
-        when(parkingSpotDAO.updateParking(ticket.getParkingSpot(true))).thenReturn(true);
+        when(parkingSpotDAO.updateParking(ticket.getParkingSpot())).thenReturn(true);
 
         parkingService.processExitingVehicle();
 
         verify(fareCalculatorService).calculateFare(ticket,true);
-        verify(parkingSpotDAO).updateParking(ticket.getParkingSpot(true));
+
+        ArgumentCaptor<ParkingSpot> parkingSpotCaptor = ArgumentCaptor.forClass(ParkingSpot.class);
+        verify(parkingSpotDAO).updateParking(parkingSpotCaptor.capture());
+        ParkingSpot updatedParkingSpot = parkingSpotCaptor.getValue();
+        assertThat(updatedParkingSpot.isAvailable()).isTrue();
+
+        ArgumentCaptor<Ticket> saveTicketCaptor = ArgumentCaptor.forClass(Ticket.class);
+        verify(ticketDAO).updateTicket(saveTicketCaptor.capture());
+        Ticket saveTicket = saveTicketCaptor.getValue();
+        assertThat(saveTicket.getInTime()).isNotNull();
+        assertThat(saveTicket.getVehicleRegNumber()).isEqualTo("ABCDEF");
+        assertThat(saveTicket.getPrice()).isGreaterThanOrEqualTo(0.0);
+        assertThat(saveTicket.getOutTime()).isNotNull().isCloseTo(new Date(), 1000);
+
     }
 
     @Test
     public void processExitingBikeTest() {
-
+/*
         Ticket ticket = new Ticket();
         ticket.setVehicleRegNumber("ABCDEF");
-        ParkingSpot parkingSpot = ticket.getParkingSpot(true);
+        ParkingSpot parkingSpot = ticket.getParkingSpot();
         parkingSpot.setAvailable(true);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(ticketDAO.getTicket("ABCDEF")).thenReturn(ticket);
         when(ticketDAO.isUsualVehicle("ABCDEF")).thenReturn(true);
         when(ticketDAO.updateTicket(ticket)).thenReturn(true);
-        when(parkingSpotDAO.updateParking(ticket.getParkingSpot(true))).thenReturn(true);
+        when(parkingSpotDAO.updateParking(ticket.getParkingSpot())).thenReturn(true);
 
         parkingService.processExitingVehicle();
 
         verify(fareCalculatorService).calculateFare(ticket,true);
-        verify(parkingSpotDAO).updateParking(ticket.getParkingSpot(true));
+        verify(parkingSpotDAO).updateParking(ticket.getParkingSpot());*/
     }
 
 
-}
+    }
+
 
 

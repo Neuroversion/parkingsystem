@@ -15,7 +15,7 @@ public class FareCalculatorService {
         long duration  = Math.max(outTime- inTime - (30*60*1000) , 0);
         double durationH = Math.round(duration/1000.0/60.0)/60.0;
         double usualFare = usualVehicle ? 0.95 : 1.0;
-        switch (ticket.getParkingSpot(true).getParkingType()){
+        switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 ticket.setPrice(durationH * Fare.CAR_RATE_PER_HOUR * usualFare);
                 break;

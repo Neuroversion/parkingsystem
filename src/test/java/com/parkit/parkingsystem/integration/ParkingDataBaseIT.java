@@ -62,8 +62,8 @@ public class ParkingDataBaseIT {
         Ticket saved = ticketDAO.getTicket("ABCDEF");
         assertThat(saved).isNotNull();
         assertThat(saved.getOutTime()).isNull();
-        assertThat(saved.getParkingSpot(true)).isNotNull();
-        assertThat(saved.getParkingSpot(true).isAvailable()).isFalse();
+        assertThat(saved.getParkingSpot()).isNotNull();
+        assertThat(saved.getParkingSpot().isAvailable()).isFalse();
 
     }
     //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
