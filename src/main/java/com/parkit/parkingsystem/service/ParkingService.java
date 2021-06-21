@@ -15,10 +15,10 @@ public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
-    private FareCalculatorService fareCalculatorService;
-    private InputReaderUtil inputReaderUtil;
-    private ParkingSpotDAO parkingSpotDAO;
-    private  TicketDAO ticketDAO;
+    private final FareCalculatorService fareCalculatorService;
+    private final InputReaderUtil inputReaderUtil;
+    private final ParkingSpotDAO parkingSpotDAO;
+    private final TicketDAO ticketDAO;
 
     public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, FareCalculatorService fareCalculatorService){
         this.inputReaderUtil = inputReaderUtil;
@@ -33,17 +33,15 @@ public class ParkingService {
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehicleRegNumber();
                 parkingSpot.setAvailable(false);
-                parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
+                parkingSpotDAO.updateParking(parkingSpot);
 
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
-                //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-                //ticket.setId(ticketID);
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setPrice(0);
                 ticket.setInTime(inTime);
-                //ticket.setOutTime();
+
                 ticketDAO.saveTicket(ticket);
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());

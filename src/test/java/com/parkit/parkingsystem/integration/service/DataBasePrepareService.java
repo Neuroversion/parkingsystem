@@ -21,10 +21,10 @@ public class DataBasePrepareService {
 
         }catch(Exception e){
             e.printStackTrace();
+
         }finally {
             dataBaseTestConfig.closeConnection(connection);
         }
     }
-
 
 }

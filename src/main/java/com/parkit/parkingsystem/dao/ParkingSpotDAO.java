@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+
 
 public class ParkingSpotDAO {
     private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
@@ -44,7 +44,6 @@ public class ParkingSpotDAO {
     }
 
     public boolean updateParking(ParkingSpot parkingSpot){
-        //update the availability to that parking slot
         Connection con = null;
         PreparedStatement ps = null;
         try {

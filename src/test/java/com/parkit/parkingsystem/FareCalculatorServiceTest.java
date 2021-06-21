@@ -14,6 +14,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
 public class FareCalculatorServiceTest {
 
     public static FareCalculatorService fareCalculatorService;
@@ -43,20 +44,18 @@ public class FareCalculatorServiceTest {
         assertEquals(ticket.getPrice(), 0.5*Fare.CAR_RATE_PER_HOUR);
     }
 
-
     @Test
     public void calculateFareForUsualCar() {
         Date inTime = new Date();
         inTime.setTime(inTime.getTime() - ( 60 * 60 * 1000));
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket,true);
         assertEquals(ticket.getPrice(), 0.95*(0.5*Fare.CAR_RATE_PER_HOUR));
-
-
     }
 
     @Test
@@ -65,13 +64,14 @@ public class FareCalculatorServiceTest {
         inTime.setTime(inTime.getTime() - ( 60 * 60 * 1000));
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket,true);
         assertEquals(ticket.getPrice(), 0.95*(0.5*Fare.BIKE_RATE_PER_HOUR));
-
     }
+
     @Test
     public void calculateFareCarForHalfAnHour() {
         Date inTime = new Date();
@@ -85,7 +85,6 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket,false);
         assertEquals(ticket.getPrice(),  0);
     }
-
 
     @Test
     public void calculateFareBike(){
@@ -114,8 +113,6 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket,false);
         assertEquals(ticket.getPrice(), 0);
     }
-
-
 
     @Test
     public void calculateFareUnkownType(){

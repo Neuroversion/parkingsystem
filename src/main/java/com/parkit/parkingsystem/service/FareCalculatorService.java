@@ -12,7 +12,7 @@ public class FareCalculatorService {
 
         long inTime= ticket.getInTime().getTime();
         long outTime = ticket.getOutTime().getTime();
-        long duration  = Math.max(outTime- inTime - (30*60*1000) , 0);
+        long duration  = Math.max(outTime- inTime - (30*60*1000), 0);
         double durationH = Math.round(duration/1000.0/60.0)/60.0;
         double usualFare = usualVehicle ? 0.95 : 1.0;
         switch (ticket.getParkingSpot().getParkingType()){
@@ -25,7 +25,6 @@ public class FareCalculatorService {
 
                 break;
             }
-
 
             default: throw new IllegalArgumentException("Unknown Parking Type");
         }

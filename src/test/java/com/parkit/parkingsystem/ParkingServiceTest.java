@@ -17,29 +17,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 
+import static com.parkit.parkingsystem.constants.ParkingType.BIKE;
 import static com.parkit.parkingsystem.constants.ParkingType.CAR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ParkingServiceTest {
+    public class ParkingServiceTest {
 
     @Mock
     private static ParkingService parkingService;
-
     @Mock
     private static InputReaderUtil inputReaderUtil;
     @Mock
     private static ParkingSpotDAO parkingSpotDAO;
     @Mock
     private static TicketDAO ticketDAO;
-    //@Mock
-    //private static DataBasePrepareService dataBasePrepareService;
-
     @Mock
     private FareCalculatorService fareCalculatorService;
-
 
     public ParkingServiceTest() {
 
@@ -52,7 +48,6 @@ public class ParkingServiceTest {
 
     @Test
     public void processIncomingCarTest() {
-
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(parkingSpotDAO.getNextAvailableSlot(CAR)).thenReturn(1);
@@ -76,7 +71,6 @@ public class ParkingServiceTest {
         assertThat(saveTicket.getOutTime()).isNull();
 
     }
-    // faire la meme chose pour une moto, une sortie moto et voiture.
 
     @Test
     public void processIncomingBikeTest() {
@@ -103,7 +97,6 @@ public class ParkingServiceTest {
         assertThat(saveTicket.getOutTime()).isNull();
 
     }
-
 
     @Test
     public void processExitingCarTest() {
@@ -139,11 +132,11 @@ public class ParkingServiceTest {
 
     @Test
     public void processExitingBikeTest() {
-/*
         Ticket ticket = new Ticket();
         ticket.setVehicleRegNumber("ABCDEF");
-        ParkingSpot parkingSpot = ticket.getParkingSpot();
-        parkingSpot.setAvailable(true);
+        ParkingSpot parkingSpot = new ParkingSpot(3, BIKE, false);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setInTime(new Date(new Date().getTime() - 3600000));
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(ticketDAO.getTicket("ABCDEF")).thenReturn(ticket);
         when(ticketDAO.isUsualVehicle("ABCDEF")).thenReturn(true);
@@ -153,9 +146,21 @@ public class ParkingServiceTest {
         parkingService.processExitingVehicle();
 
         verify(fareCalculatorService).calculateFare(ticket,true);
-        verify(parkingSpotDAO).updateParking(ticket.getParkingSpot());*/
-    }
 
+        ArgumentCaptor<ParkingSpot> parkingSpotCaptor = ArgumentCaptor.forClass(ParkingSpot.class);
+        verify(parkingSpotDAO).updateParking(parkingSpotCaptor.capture());
+        ParkingSpot updatedParkingSpot = parkingSpotCaptor.getValue();
+        assertThat(updatedParkingSpot.isAvailable()).isTrue();
+
+        ArgumentCaptor<Ticket> saveTicketCaptor = ArgumentCaptor.forClass(Ticket.class);
+        verify(ticketDAO).updateTicket(saveTicketCaptor.capture());
+        Ticket saveTicket = saveTicketCaptor.getValue();
+        assertThat(saveTicket.getInTime()).isNotNull();
+        assertThat(saveTicket.getVehicleRegNumber()).isEqualTo("ABCDEF");
+        assertThat(saveTicket.getPrice()).isGreaterThanOrEqualTo(0.0);
+        assertThat(saveTicket.getOutTime()).isNotNull().isCloseTo(new Date(), 1000);
+
+        }
 
     }
 

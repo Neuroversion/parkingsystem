@@ -6,9 +6,9 @@ public class Ticket {
     private int id;
     private ParkingSpot parkingSpot;
     private String vehicleRegNumber;
-    private double price;
     private Date inTime;
     private Date outTime;
+    private double price;
 
     public int getId() {
         return id;

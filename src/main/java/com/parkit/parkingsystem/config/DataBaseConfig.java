@@ -46,7 +46,6 @@ public class DataBaseConfig {
             } catch (SQLException e) {
                 logger.error("Error while closing result set",e);
             }
-
         }
     }
 
