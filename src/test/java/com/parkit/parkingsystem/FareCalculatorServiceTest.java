@@ -14,7 +14,9 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
+/**
+ * @author Ridouan
+ */
 public class FareCalculatorServiceTest {
 
     public static FareCalculatorService fareCalculatorService;
@@ -29,6 +31,7 @@ public class FareCalculatorServiceTest {
     private void setUpPerTest() {
         ticket = new Ticket();
     }
+
 
     @Test
     public void calculateFareCar(){

@@ -23,6 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Ridouan
+ */
 @ExtendWith(MockitoExtension.class)
     public class ParkingServiceTest {
 
@@ -36,10 +39,6 @@ import static org.mockito.Mockito.when;
     private static TicketDAO ticketDAO;
     @Mock
     private FareCalculatorService fareCalculatorService;
-
-    public ParkingServiceTest() {
-
-    }
 
     @BeforeEach
     public void setUpPerTest() {

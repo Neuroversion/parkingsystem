@@ -6,6 +6,9 @@ import org.apache.logging.log4j.Logger;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+/**
+ * @author Ridouan
+ */
 public class InputReaderUtil {
 
     private static final Scanner scan = new Scanner(System.in, StandardCharsets.UTF_8);

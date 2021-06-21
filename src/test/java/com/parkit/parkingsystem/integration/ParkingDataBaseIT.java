@@ -21,6 +21,9 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Ridouan
+ */
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
 
@@ -55,6 +58,10 @@ public class ParkingDataBaseIT {
 
     }
 
+    /**
+     * Check that a ticket is actually saved in DB and Parking table is updated with availability
+     * @throws SQLException the sql exception
+     */
     @Test
     public void testParkingACar() throws SQLException {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, fareCalculatorService);
@@ -65,9 +72,13 @@ public class ParkingDataBaseIT {
         assertThat(saved.getParkingSpot()).isNotNull();
         assertThat(saved.getParkingSpot().isAvailable()).isFalse();
     }
-    //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
 
-
+    /**
+     * Check that the fare generated and out time are populated correctly in the database
+     *
+     * @throws InterruptedException the interrupted exception
+     * @throws SQLException         the sql exception
+     */
     @Test
     public void testParkingLotExit() throws InterruptedException, SQLException {
         testParkingACar();
@@ -77,8 +88,6 @@ public class ParkingDataBaseIT {
         Ticket saved = ticketDAO.getTicket("ABCDEF");
         assertThat(saved.getOutTime()).isNotNull();
         assertThat(saved.getPrice()).isGreaterThanOrEqualTo(0.0);
-
-        //TODO: check that the fare generated and out time are populated correctly in the database
 
     }
 
