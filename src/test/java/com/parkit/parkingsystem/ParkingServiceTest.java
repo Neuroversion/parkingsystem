@@ -133,7 +133,7 @@ import static org.mockito.Mockito.when;
     public void processExitingBikeTest() {
         Ticket ticket = new Ticket();
         ticket.setVehicleRegNumber("ABCDEF");
-        ParkingSpot parkingSpot = new ParkingSpot(3, BIKE, false);
+        ParkingSpot parkingSpot = new ParkingSpot(4, BIKE, false);
         ticket.setParkingSpot(parkingSpot);
         ticket.setInTime(new Date(new Date().getTime() - 3600000));
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
