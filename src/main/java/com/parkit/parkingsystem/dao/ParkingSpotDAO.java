@@ -19,6 +19,11 @@ public class ParkingSpotDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     *
+     * @param parkingType
+     * @return
+     */
     public int getNextAvailableSlot(ParkingType parkingType) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -45,6 +50,11 @@ public class ParkingSpotDAO {
         return result;
     }
 
+    /**
+     *
+     * @param parkingSpot
+     * @return
+     */
     public boolean updateParking(ParkingSpot parkingSpot){
         Connection con = null;
         PreparedStatement ps = null;

@@ -19,6 +19,11 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     *
+     * @param ticket
+     * @return
+     */
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
         PreparedStatement ps = null;
@@ -41,6 +46,11 @@ public class TicketDAO {
         }
     }
 
+    /**
+     *
+     * @param vehicleRegNumber
+     * @return
+     */
     public boolean isUsualVehicle(String vehicleRegNumber) {
         Connection con = null;
         PreparedStatement ps =null;
@@ -69,6 +79,12 @@ public class TicketDAO {
         }
         return isUsualVehicle;
     }
+
+    /**
+     *
+     * @param vehicleRegNumber
+     * @return
+     */
     public Ticket getTicket(String vehicleRegNumber) {
         Connection con = null;
         Ticket ticket = null;
@@ -103,6 +119,11 @@ public class TicketDAO {
         return ticket;
     }
 
+    /**
+     *
+     * @param ticket
+     * @return
+     */
     public boolean updateTicket(Ticket ticket) {
         Connection con = null;
         PreparedStatement ps =null;

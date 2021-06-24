@@ -7,7 +7,11 @@ import com.parkit.parkingsystem.model.Ticket;
  * @author Ridouan
  */
 public class FareCalculatorService {
-
+    /**
+     *
+     * @param ticket for which calculate fare
+     * @param usualVehicle if true, apply a reduction for all usual vehicles
+     */
     public void calculateFare(Ticket ticket,boolean usualVehicle ){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime());

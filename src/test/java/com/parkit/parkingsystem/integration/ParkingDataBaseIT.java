@@ -58,10 +58,6 @@ public class ParkingDataBaseIT {
 
     }
 
-    /**
-     * Check that a ticket is actually saved in DB and Parking table is updated with availability
-     * @throws SQLException the sql exception
-     */
     @Test
     public void testParkingACar() throws SQLException {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, fareCalculatorService);
@@ -73,12 +69,6 @@ public class ParkingDataBaseIT {
         assertThat(saved.getParkingSpot().isAvailable()).isFalse();
     }
 
-    /**
-     * Check that the fare generated and out time are populated correctly in the database
-     *
-     * @throws InterruptedException the interrupted exception
-     * @throws SQLException         the sql exception
-     */
     @Test
     public void testParkingLotExit() throws InterruptedException, SQLException {
         testParkingACar();

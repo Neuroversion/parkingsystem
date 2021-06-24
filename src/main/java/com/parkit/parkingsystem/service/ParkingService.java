@@ -23,6 +23,7 @@ public class ParkingService {
     private final ParkingSpotDAO parkingSpotDAO;
     private final TicketDAO ticketDAO;
 
+
     public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, FareCalculatorService fareCalculatorService){
         this.inputReaderUtil = inputReaderUtil;
         this.parkingSpotDAO = parkingSpotDAO;
