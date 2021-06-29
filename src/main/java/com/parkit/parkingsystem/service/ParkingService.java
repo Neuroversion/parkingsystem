@@ -47,6 +47,9 @@ public class ParkingService {
                 ticket.setInTime(inTime);
 
                 ticketDAO.saveTicket(ticket);
+                if (ticketDAO.isUsualVehicle(vehicleRegNumber)) {
+                    System.out.println("Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
+                }
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);

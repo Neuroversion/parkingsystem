@@ -61,11 +61,9 @@ public class TicketDAO {
             ps = con.prepareStatement(DBConstants.IS_USUAL_VEHICLE);
             // VEHICLE_REG_NUMBER
             ps.setString(1,vehicleRegNumber);
-            ps.setInt(2, 7); // Period duration in days
-            ps.setInt(3, 0); // Minimal price
             rs = ps.executeQuery();
             if(rs.next()){
-                isUsualVehicle = rs.getInt(1) > 3;
+                isUsualVehicle = rs.getInt(1) > 1;
             }
 
 
